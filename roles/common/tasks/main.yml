@@ -70,5 +70,23 @@
     enabled: yes
     state: started
 
+- name: install logrotate
+  apt:
+    name: logrotate
+    state: present
+
+- name: configure logrotate
+  template:
+    src: logrotate.conf.j2
+    dest: /etc/logrotate.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: enable and start logrotate
+  service:
+    name: logrotate.timer
+    enabled: yes
+    state: started
 
 

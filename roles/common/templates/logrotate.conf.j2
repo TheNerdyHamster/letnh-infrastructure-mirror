@@ -1,0 +1,28 @@
+# see "man logrotate" for manual
+# see "man logrotate.conf" for documentation
+
+weekly 0
+
+rotate 30
+
+size 200M
+
+create
+
+compress
+
+include /etc/logrotate.d
+
+/var/log/wtmp {
+    missingok
+    monthly
+    create 0600 root utmp
+    rotate 1
+}
+
+/var/log/btmp {
+    missingok
+    monthly
+    create 0600 root utmp
+    rotate 1
+}
