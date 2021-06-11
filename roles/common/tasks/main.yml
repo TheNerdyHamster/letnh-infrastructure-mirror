@@ -1,8 +1,4 @@
 ---
-# - name: Install inetutils to configure hostname
-#   apt:
-#     name: inetutils
-#     state: present
 
 - name: configure hostname
   hostname:
@@ -44,11 +40,35 @@
     dest: /etc/systemd/{{ item }}
     owner: root
     group: root
-    mode: 644
+    mode: 0644
   with_items:
     - journald.conf
   notify:
     - restart journald
+
+- name: install syslog-ng
+  apt:
+    name: syslog-ng
+    state: present
+
+- name: configure syslog-ng
+  template:
+    src: "{{ item.name }}.j2"
+    dest: "{{ item.path }}{{ item.name }}"
+    owner: root
+    group: root
+    mode: "{{ item.mode }}"
+  with_items:
+    - { name: "syslog-ng.conf", path: "/etc/syslog-ng/", mode: '0600' }
+    - { name: "syslog-ng@default", path: "/etc/default/", mode: '0644' }
+  notify:
+    - restart syslog-ng
+
+- name: enable and start syslog-ng
+  service:
+    name: syslog-ng
+    enabled: yes
+    state: started
 
 
 
