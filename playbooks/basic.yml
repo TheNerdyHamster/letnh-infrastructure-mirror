@@ -1,0 +1,6 @@
+---
+- name: Inital & basic configuratio for all hosts
+  hosts: all
+  remote_user: root
+  roles:
+    - { role: common }
