@@ -1,0 +1,54 @@
+---
+# - name: Install inetutils to configure hostname
+#   apt:
+#     name: inetutils
+#     state: present
+
+- name: configure hostname
+  hostname:
+    name: "{{ inventory_hostname }}"
+
+- name: update package cache
+  apt:
+    update_cache: yes
+
+- name: install auditd
+  apt:
+    name: 
+      - auditd
+      - audispd-plugins
+
+- name: enable and start auditd
+  service:
+    name: auditd
+    enabled: yes
+    state: started
+
+- name: enable and start systemd-timesyncd
+  service:
+    name: systemd-timesyncd
+    enabled: yes
+    state: started
+
+- name: generate ssh key for root user
+  openssh_keypair:
+    path: "/root/.ssh/id_rsa"
+    type: rsa
+    size: 4096
+    state: present
+    force: no
+
+- name: configure journald
+  template:
+    src: "{{ item }}.j2"
+    dest: /etc/systemd/{{ item }}
+    owner: root
+    group: root
+    mode: 644
+  with_items:
+    - journald.conf
+  notify:
+    - restart journald
+
+
+
