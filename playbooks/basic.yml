@@ -6,4 +6,5 @@
     - { role: common }
     - { role: tools }
     - { role: firewall }
+    - { role: sshd }
     
