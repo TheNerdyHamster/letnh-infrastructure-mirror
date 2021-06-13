@@ -1,0 +1,27 @@
+---
+- name: install sys, devops & utils tools
+  apt:
+    name:
+      - tmux
+      - nmap
+      - rsync
+      - sshfs
+      - mtr
+      - tree
+      - sysstat
+      - tcpdump
+      - vnstat
+      - ncdu
+      - dfc
+      - zsh
+      - ipcalc
+      - neovim
+      - fzf
+      - wget
+      - curl
+
+- name: start & enable vnstatd
+  service:
+    name: vnstatd
+    enabled: yes
+    state: started
