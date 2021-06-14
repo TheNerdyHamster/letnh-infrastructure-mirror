@@ -2,7 +2,7 @@
 
 groups:
 
-sudo:
+sudo_users:
   - root
   - letnh
 
@@ -11,7 +11,8 @@ root_ssh_keys:
 
 users:
   letnh:
-    name: "Leo Ronnebro"
+    name: "Leo Rönnebro"
     ssh_key: letnh.pub
+    sudo: yes
     # shell:
     # groups:

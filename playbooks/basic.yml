@@ -8,4 +8,5 @@
     - { role: firewall }
     - { role: sshd }
     - { role: root }
+    - { role: sudo }
     
