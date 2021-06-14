@@ -17,3 +17,11 @@
     owner: root
     group: root
     mode: 0644
+
+- name: configure banner
+  template:
+    src: login.warn.j2
+    dest: /etc/login.warn
+    owner: root
+    group: root
+    mode: 0644
