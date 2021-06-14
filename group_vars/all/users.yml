@@ -1,0 +1,17 @@
+---
+
+groups:
+
+sudo:
+  - root
+  - letnh
+
+root_ssh_keys:
+  - letnh.pub
+
+users:
+  letnh:
+    name: "Leo Ronnebro"
+    ssh_key: letnh.pub
+    # shell:
+    # groups:

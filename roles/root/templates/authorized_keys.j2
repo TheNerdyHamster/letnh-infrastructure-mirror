@@ -1,0 +1,3 @@
+{% for key in root_ssh_keys | sort -%}
+   {{ lookup('file', role_path + '/../../public_keys/' + key) }}
+{% endfor %}
