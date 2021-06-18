@@ -2,7 +2,7 @@
 
 - name: configure hostname
   hostname:
-    name: "{{ inventory_hostname }}"
+    name: "{{ inventory_hostname }}.{{ domain }}"
 
 - name: update package cache
   apt:
