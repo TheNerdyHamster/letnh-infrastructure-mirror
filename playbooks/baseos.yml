@@ -1,0 +1,6 @@
+---
+- name: Install rocky linux
+  hosts: install
+  remote_user: root
+  roles:
+    - { role: rocky-install, when: (ansible_distribution_major_version == "8" and ansible_os_family == "RedHat") }
