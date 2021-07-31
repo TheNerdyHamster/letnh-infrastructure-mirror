@@ -4,14 +4,20 @@
   hostname:
     name: "{{ inventory_hostname }}.{{ domain }}"
 
-- name: update package cache
-  apt:
+- name: add epel & update package cache
+  dnf:
+    name: epel-release 
+    state: latest
     update_cache: yes
 
+- name: update all packages
+  dnf:
+    name: "*"
+    state: latest
+
 - name: install auditd
-  apt:
+  dnf:
     name: 
-      - auditd
       - audispd-plugins
 
 - name: enable and start auditd
@@ -20,11 +26,9 @@
     enabled: yes
     state: started
 
-- name: enable and start systemd-timesyncd
-  service:
-    name: systemd-timesyncd
-    enabled: yes
-    state: started
+- name: configure timezone
+  timezone:
+    name: 'Europe/Stockholm'
 
 - name: generate ssh key for root user
   openssh_keypair:
@@ -47,7 +51,7 @@
     - restart journald
 
 - name: install syslog-ng
-  apt:
+  dnf:
     name: syslog-ng
     state: present
 
@@ -71,7 +75,7 @@
     state: started
 
 - name: install logrotate
-  apt:
+  dnf:
     name: logrotate
     state: present
 
@@ -82,6 +86,14 @@
     owner: root
     group: root
     mode: 0644
+
+- name: configure logrotate server
+  template:
+    src: logrotate.timer.j2
+    dest: /usr/lib/systemd/system/logrotate.timer
+    owner: root
+    group: root
+    mode: 0600
 
 - name: enable and start logrotate
   service:

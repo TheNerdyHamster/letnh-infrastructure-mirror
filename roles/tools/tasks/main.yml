@@ -1,22 +1,19 @@
 ---
 - name: install sys, devops & utils tools
-  apt:
+  dnf:
     name:
-      - tmux
       - nmap
       - rsync
-      - sshfs
       - mtr
       - tree
       - sysstat
       - tcpdump
       - vnstat
       - ncdu
-      - dfc
       - zsh
       - ipcalc
       - neovim
-      - fzf
+      - the_silver_searcher
       - wget
       - curl
 
