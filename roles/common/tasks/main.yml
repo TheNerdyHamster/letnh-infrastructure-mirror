@@ -87,18 +87,12 @@
     group: root
     mode: 0644
 
-- name: configure logrotate server
-  template:
-    src: logrotate.timer.j2
-    dest: /usr/lib/systemd/system/logrotate.timer
-    owner: root
-    group: root
-    mode: 0600
+# Outdate: due to daily cron job
 
-- name: enable and start logrotate
-  service:
-    name: logrotate.timer
-    enabled: yes
-    state: started
+# - name: enable and start logrotate
+#   service:
+#     name: logrotate.timer
+#     enabled: yes
+#     state: started
 
 
