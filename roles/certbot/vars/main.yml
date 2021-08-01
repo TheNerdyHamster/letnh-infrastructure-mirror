@@ -1,0 +1,2 @@
+container_prefix: 'certbot'
+cert_domain: '{{ domain }}'

@@ -1,0 +1,44 @@
+--- 
+- name: create certbot filestructure
+  file:
+    path: "{{ item.path }}"
+    state: directory
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+  with_items:
+    - { path: '/etc/letsencrypt', owner: 'root', group: 'root' }
+    - { path: '/var/log/letsencrypt', owner: 'root', group: 'root' }
+    - { path: '/opt/letsencrypt', owner: 'root', group: 'root' }
+
+- name: deploy hetzner.ini configuration file
+  template:
+    src: hetzner.ini.j2
+    dest: '/opt/letsencrypt/hetzner.ini'
+    group: root
+    owner: root
+    mode: 0600
+
+- name: Test
+  debug:
+    msg: '{{ cert_mail }}'
+    
+- name: deploy cerbot container
+  containers.podman.podman_container:
+    name: "{{ container_prefix }}_{{ cert_domain }}"
+    image: "docker.io/thenerdyhamster/certbot-dns-hetzner"
+    state: started
+    restart_policy: always
+    volume:
+      - /etc/letsencrypt:/etc/letsencrypt
+      - /var/log/letsencrypt:/var/log/letsencrypt
+      - /opt/letsencrypt/hetzner.ini:/opt/letsencrypt/hetzner.ini
+    command: |
+      certonly -n
+      -a dns-hetzner
+      --no-eff-email
+      --dns-hetzner-credentials /opt/letsencrypt/hetzner.ini
+      --dns-hetzner-propagation-seconds 30
+      --agree-tos
+      -m {{ cert_mail }}
+      -d {{ cert_domain }}
+      
