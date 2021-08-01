@@ -1,0 +1,23 @@
+---
+
+- name: install podman
+  dnf:
+    name: podman
+    state: present
+
+- name: create podadmin group
+  group:
+    name: podadmin
+    state: present
+  register: podadmin
+
+- name: debug
+  debug:
+    var: podadmin
+
+- name: update permission for podman
+  file:
+    path: /usr/bin/podman
+    owner: root
+    group: podadmin
+    mode: 0754

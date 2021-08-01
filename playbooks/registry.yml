@@ -1,0 +1,6 @@
+---
+- name: registry setup
+  hosts: registry
+  remote_user: root
+  roles:
+    - { role: podman }
