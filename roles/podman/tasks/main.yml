@@ -11,10 +11,6 @@
     state: present
   register: podadmin
 
-- name: debug
-  debug:
-    var: podadmin
-
 - name: update permission for podman
   file:
     path: /usr/bin/podman
