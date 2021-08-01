@@ -1,3 +1,4 @@
 plugin: hcloud
 keyed_groups:
   - key: labels
+    separator: ""
