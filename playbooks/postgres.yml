@@ -1,0 +1,9 @@
+---
+
+- name: postgres deployment
+  hosts: postgres
+  remote_user: root
+  roles:
+    - { role: podman }
+    - { role: certbot, cert_domain: 'database.{{ domain }}' }
+    - { role: postgres, db_domain: 'database.{{ domain}}' }
