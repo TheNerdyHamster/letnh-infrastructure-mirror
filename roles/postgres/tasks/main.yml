@@ -1,32 +1,21 @@
 ---
 
-- name: generate postgres filestructure
-  file:
-    path: '{{ item.path }}'
-    state: directory
-    owner: '{{ item.owner }}'
-    group: '{{ item.group }}'
-  with_items:
-    - { path: '/var/lib/postgresql/data', owner: 'root', group: '999' }
-    - { path: '/etc/postgresql', owner: 'root', group: '999' }
-    #- { path: '/etc/postgresql/certs', owner: 'root', group: 'root' }
 
 - name: copy postgres.conf template to host
   template:
     src: postgresql.conf.j2
     dest: /etc/postgresql/postgresql.conf
-    owner: root
-    group: 999
+    owner: '999'
+    group: '999'
 
 - name: change permissions on certs
   file:
-    path: '/etc/letsencrypt/live/{{ db_domain }}/{{ item.name }}'
-    state: link
-    owner: '{{ item.owner }}'
-    group: '{{ item.group }}'
-  with_items:
-    - { name: 'privkey.pem', owner: 'root', group: '999' }
-    - { name: 'cert.pem', owner: 'root', group: '999' }
+    path: '/etc/letsencrypt/live/{{ db_domain }}'
+    state: directory
+    owner: 'root'
+    group: '999'
+    mode: 0640
+    recurse: yes
 
 - name: deploy postgres container
   containers.podman.podman_container:
