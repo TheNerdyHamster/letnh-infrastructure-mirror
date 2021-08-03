@@ -1,0 +1,25 @@
+---
+
+# general
+pg_user: 'postgres'
+pg_password: 'postgres'
+
+# postgresql.conf
+pg_listen_addresses: '*' # DO NOT EDIT, IF YOU AIN'T SURE
+pg_max_conns: '100'
+
+pg_ssl: 'off'
+pg_ssl_prefer_server_ciphers: 'on'
+pg_ssl_ca_file: '/var/lib/postgresql/data/chain.pem'
+pg_ssl_cert_file: '/var/lib/postgresql/data/fullchain.pem'
+pg_ssl_key_file: '/var/lib/postgresql/data/privkey.pem'
+
+pg_shared_buffers: '128MB'
+pg_work_mem: '4MB'
+pg_maintenance_work_mem: '64MB'
+pg_effective_cache_size: '4GB'
+pg_jit: 'on'
+
+# pg_hba.conf
+pg_ssl_hosts_ipv4: []
+pg_ssl_hosts_ipv6: []

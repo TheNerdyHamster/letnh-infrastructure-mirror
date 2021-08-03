@@ -56,12 +56,12 @@
 
 # - Connection Settings -
 
-listen_addresses = '*'
+listen_addresses = '{{ pg_listen_addresses }}'
 					# comma-separated list of addresses;
 					# defaults to 'localhost'; use '*' for all
 					# (change requires restart)
 #port = 5432				# (change requires restart)
-max_connections = 100			# (change requires restart)
+max_connections = {{ pg_max_conns }}	# (change requires restart)
 #superuser_reserved_connections = 3	# (change requires restart)
 #unix_socket_directories = '/tmp'	# comma-separated list of directories
 					# (change requires restart)
@@ -97,13 +97,13 @@ max_connections = 100			# (change requires restart)
 
 # - SSL -
 
-ssl = on
-#ssl_ca_file = ''
-ssl_cert_file = '/etc/postgresql/certs/fullchain.pem'
+ssl = {{ pg_ssl }}
+ssl_ca_file = '{{ pg_ssl_ca_file }}'
+ssl_cert_file = '{{ pg_ssl_cert_file }}'
 #ssl_crl_file = ''
-ssl_key_file = '/etc/postgresql/certs/privkey.pem'
+ssl_key_file = '{{ pg_ssl_key_file }}'
 #ssl_ciphers = 'HIGH:MEDIUM:+3DES:!aNULL' # allowed SSL ciphers
-#ssl_prefer_server_ciphers = on
+ssl_prefer_server_ciphers = {{ pg_ssl_prefer_server_ciphers }}
 #ssl_ecdh_curve = 'prime256v1'
 #ssl_min_protocol_version = 'TLSv1.2'
 #ssl_max_protocol_version = ''
@@ -118,7 +118,7 @@ ssl_key_file = '/etc/postgresql/certs/privkey.pem'
 
 # - Memory -
 
-shared_buffers = 512MB			# min 128kB
+shared_buffers = {{ pg_shared_buffers }}# min 128kB
 					# (change requires restart)
 #huge_pages = try			# on, off, or try
 					# (change requires restart)
@@ -127,9 +127,9 @@ shared_buffers = 512MB			# min 128kB
 					# (change requires restart)
 # Caution: it is not advisable to set max_prepared_transactions nonzero unless
 # you actively intend to use prepared transactions.
-#work_mem = 4MB				# min 64kB
+work_mem = {{ pg_work_mem }}				# min 64kB
 #hash_mem_multiplier = 1.0		# 1-1000.0 multiplier on hash table work_mem
-#maintenance_work_mem = 64MB		# min 1MB
+maintenance_work_mem = {{ pg_maintenance_work_mem }} # min 1MB
 #autovacuum_work_mem = -1		# min 1MB, or -1 to use maintenance_work_mem
 #logical_decoding_work_mem = 64MB	# min 64kB
 #max_stack_depth = 2MB			# min 100kB
@@ -390,7 +390,7 @@ shared_buffers = 512MB			# min 128kB
 
 #min_parallel_table_scan_size = 8MB
 #min_parallel_index_scan_size = 512kB
-#effective_cache_size = 4GB
+effective_cache_size = {{ pg_effective_cache_size }}
 
 # - Genetic Query Optimizer -
 
@@ -411,7 +411,7 @@ shared_buffers = 512MB			# min 128kB
 #join_collapse_limit = 8		# 1 disables collapsing of explicit
 					# JOIN clauses
 #force_parallel_mode = off
-#jit = on				# allow JIT compilation
+jit = {{ pg_jit }}				# allow JIT compilation
 #plan_cache_mode = auto			# auto, force_generic_plan or
 					# force_custom_plan
 
