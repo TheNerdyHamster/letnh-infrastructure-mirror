@@ -88,7 +88,7 @@ max_connections = {{ pg_max_conns }}	# (change requires restart)
 # - Authentication -
 
 #authentication_timeout = 1min		# 1s-600s
-#password_encryption = md5		# md5 or scram-sha-256
+password_encryption = '{{ pg_password_encryption }}'		# md5 or scram-sha-256
 #db_user_namespace = off
 
 # GSSAPI using Kerberos

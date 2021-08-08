@@ -98,7 +98,7 @@ host    replication     all             ::1/128                 md5
 
 # IPv4 Remote clients
 {% for host in pg_ssl_hosts_ipv4 %}
-hostssl all		all		{{ host }}	255.255.255.255		md5
+hostssl all		all		{{ host }}	255.255.255.255		scram-sha-256
 {% endfor %}
 
 # IPv6 Remtoe clients

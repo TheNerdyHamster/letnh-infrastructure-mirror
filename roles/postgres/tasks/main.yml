@@ -18,7 +18,7 @@
       - 5432:5432
     env:
       POSTGRES_USER: '{{ pg_user }}'
-      POSTGRES_PASSWORD: '{{ pg_password }}'
+      POSTGRES_PASSWORD: '{{ pg_default_password }}'
     volumes:
       - /var/lib/postgresql/data:/var/lib/postgresql/data
 
@@ -42,7 +42,7 @@
     group: '999'
     mode: 0400
   with_items:
-    - { cert: 'fullchain.pem', dest: '{{ pg_ssl_cert_file }}' }
+    - { cert: 'cert.pem', dest: '{{ pg_ssl_cert_file }}' }
     - { cert: 'chain.pem', dest: '{{ pg_ssl_ca_file }}' }
     - { cert: 'privkey.pem', dest: '{{ pg_ssl_key_file }}' }
   when: pg_ssl == 'on'
@@ -65,11 +65,11 @@
     name: psycopg2-binary
     state: present
 
-# - name: create test database
-#   postgresql_db:
-#     login_host: 135.181.42.75
-#     login_user: '{{ pg_user }}'
-#     login_password: '{{ pg_password }}'
-#     maintenance_db: '{{ pg_user }}'
-#     name: postgres
-#     owner: '{{ pg_user }}'
+- name: Update postgres password
+  postgresql_user:
+    login_host: database.letnh.com
+    login_user: '{{ pg_user }}'
+    login_password: '{{ pg_default_password }}'
+    name: '{{ pg_user }}'
+    password: '{{ pg_password }}'
+    ssl_mode: require

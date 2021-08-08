@@ -2,12 +2,16 @@
 
 # general
 pg_user: 'postgres'
-pg_password: 'postgres'
+pg_default_password: 'postgres'
 
 # postgresql.conf
 pg_listen_addresses: '*' # DO NOT EDIT, IF YOU AIN'T SURE
 pg_max_conns: '100'
 
+# Auth
+pg_password_encryption: 'md5'
+
+# SSL
 pg_ssl: 'off'
 pg_ssl_prefer_server_ciphers: 'on'
 pg_ssl_ca_file: '/var/lib/postgresql/data/chain.pem'
