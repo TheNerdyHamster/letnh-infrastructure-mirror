@@ -3,6 +3,7 @@
   dnf:
     name:
       - nmap
+      - net-tools
       - rsync
       - mtr
       - tree
