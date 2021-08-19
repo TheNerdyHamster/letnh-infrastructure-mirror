@@ -17,6 +17,8 @@
     ports:
       - 5432:5432
     env:
+      POSTGRES_HOST_AUTH_METHOD: scram-sha-256
+      POSTGRES_INITDB_ARGS: --auth-host=scram-sha-256
       POSTGRES_USER: '{{ pg_user }}'
       POSTGRES_PASSWORD: '{{ pg_default_password }}'
     volumes:

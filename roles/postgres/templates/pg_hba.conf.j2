@@ -87,18 +87,18 @@
 # "local" is for Unix domain socket connections only
 local   all             {{ pg_user }}                           peer
 # IPv4 local connections:
-host    all             {{ pg_user }}   127.0.0.1/32            md5
+host    all             {{ pg_user }}   127.0.0.1/32            scram-sha-256
 # IPv6 local connections:
-host    all             {{ pg_user }}   ::1/128                 md5
+host    all             {{ pg_user }}   ::1/128                 scram-sha-256
 # Allow replication connections from localhost, by a user with the
 # replication privilege.
 local   replication     all                                     peer
-host    replication     all             127.0.0.1/32            md5
-host    replication     all             ::1/128                 md5
+host    replication     all             127.0.0.1/32            scram-sha-256
+host    replication     all             ::1/128                 scram-sha-256
 
 # IPv4 Remote clients
 {% for host in pg_ssl_hosts_ipv4 %}
-hostssl all		all		{{ host }}	255.255.255.255		scram-sha-256
+hostssl all		all		{{ host | ipaddr('network') }}	{{ host | ipaddr('netmask') }}		scram-sha-256
 {% endfor %}
 
 # IPv6 Remtoe clients
