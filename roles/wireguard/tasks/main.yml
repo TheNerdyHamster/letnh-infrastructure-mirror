@@ -1,0 +1,44 @@
+---
+
+- name: create wireguard filestructure
+  file:
+    path: '/containers/{{ container_name }}/{{ item.path }}'
+    state: directory
+    owner: '{{ item.owner }}'
+    group: '{{ item.group }}'
+  with_items:
+    - { path: '/config', owner: '1000', group: '1000' }
+
+
+- name: configure firewalld
+  firewalld:
+    zone: public
+    port: 51820/udp
+    permanent: yes
+    state: enabled
+
+- name: deploy wireguard container
+  docker_container:
+    name: "{{ container_name }}"
+    image: "{{ wireguard_image }}"
+    state: started
+    env:
+      PUID: "1000"
+      PGID: "1000"
+      TZ: "Europe/London"
+      SERVERURL: "vpn.letnh.com"
+      SERVERPORT: "51820" #optional
+      PEERS: "1" #optional
+      PEERDNS: "auto" #optional
+      INTERNAL_SUBNET: "10.0.1.0" #optional
+    capabilities:
+      - NET_ADMIN
+      - SYS_MODULE
+    sysctls:
+      net.ipv4.conf.all.src_valid_mark: 1
+    ports:
+      - 51820:51820/udp
+    restart_policy: unless-stopped
+    volumes:
+      - /containers/{{ container_name }}/config:/config
+      - /lib/modules:/lib/modules

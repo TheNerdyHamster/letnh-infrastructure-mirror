@@ -1,0 +1,7 @@
+---
+- name: VPN Server deployment
+  hosts: vpn
+  remote_user: root
+  roles:
+    - { role: docker }
+    - { role: wireguard }
