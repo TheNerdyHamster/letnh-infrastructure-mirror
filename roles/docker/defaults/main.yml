@@ -1,0 +1,9 @@
+---
+
+docker_edition: 'ce'
+docker_package: "docker-{{ docker_edition }}"
+
+docker_repo_url: https://download.docker.com/linux
+docker_yum_repo_url: "{{ docker_repo_url }}/{{ (ansible_distribution == 'Fedora') | ternary('fedora','centos') }}/docker-{{ docker_edition }}.repo"
+
+docker_deamon_opts: {}

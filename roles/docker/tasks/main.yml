@@ -1,0 +1,49 @@
+---
+- name: Add Docker GPG key
+  rpm_key:
+    key: "{{ docker_repo_url }}/centos/gpg"
+    state: present
+
+- name: Add Docker repo.
+  get_url:
+    url: "{{ docker_yum_repo_url }}"
+    dest: '/etc/yum.repos.d/docker-{{ docker_edition }}.repo'
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Configure containerd
+  block:
+    - name: Ensure contianer-selinux is installed
+      dnf:
+        name: container-selinux
+        state: present
+
+    - name: Ensure containerd.io is installed
+      dnf:
+        name: containerd.io
+        state: present
+
+- name: Install Docker
+  package:
+    name: "{{ docker_package }}"
+    state: present
+  notify: restart docker
+
+- name: Ensure /etc/docker/ directory exists
+  file:
+    path: /etc/docker
+    state: directory
+    mode: 0755
+
+- name: Ensure /containers/ directory exists
+  file:
+    path: /containers
+    state: directory
+    mode: 0755
+
+- name: Ensure Docker is started and enabled at boot
+  service:
+    name: docker
+    state: restarted
+    enabled: yes
