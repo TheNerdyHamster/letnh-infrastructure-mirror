@@ -47,3 +47,8 @@
     name: docker
     state: restarted
     enabled: yes
+
+- name: Install docker pip
+  pip:
+    name: docker
+    state: present
