@@ -1,27 +1,30 @@
 ---
 
-# - name: remove all users from sudo group
-#   command: groupmems -g sudo --purge
-#   register: groupmemes
-#   changed_when: "groupmems.rc == 0"
+- name: install sudo
+  dnf:
+    name: sudo
+    state: present
 
-# - name: create sudo users
-#   user:
-#     name: {{ item.key }}
-#     group: sudo
-#     groups: "{{ item.value.groups + [ 'sudo' ] | join(',') }}"
-#     comment: "{{ item.value.name }}"
-#     password: ""
-#     update_password: on_create
-#     state: present
+- name: remove all users from wheel group
+  command: groupmems -g wheel --purge
+  register: groupmems
+  changed_when: "groupmems.rc == 0"
+
+- name: add sudo users to wheel group
+  user:
+    name: '{{ item }}'
+    append: yes
+    groups: 
+      - wheel
+  with_items: '{{ sudo_users }}'
 
 - name: allow sudo users to use sudo
   lineinfile:
     dest: /etc/sudoers
     state: present
-    regexp: '^%sudo ALL=\(ALL:ALL\) ALL'
+    regexp: '^%wheel ALL=\(ALL:ALL\) ALL'
     insertafter: '^# %sudo ALL=\(ALL:ALL\) ALL'
-    line: '%sudo ALL=(ALL:ALL) ALL'
+    line: '%wheel ALL=(ALL:ALL) ALL'
     validate: 'visudo -cf %s'
     mode: 0440
     owner: root

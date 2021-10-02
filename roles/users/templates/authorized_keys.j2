@@ -1,0 +1,5 @@
+{% set keys = [item.value.ssh_key] %}
+{% for key in keys %}
+  {{ lookup('file', '../public_keys/' + key) }}
+{% endfor %}
+

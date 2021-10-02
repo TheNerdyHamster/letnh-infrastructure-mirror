@@ -1,6 +1,11 @@
 ---
 
-#groups:
+# Default groups
+groups:
 
-sudo_users:
-  - root
+users:
+  letnh:
+    name: "Leo Rönnebro"
+    ssh_key: letnh.pub
+    groups: []
+

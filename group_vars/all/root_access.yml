@@ -1,5 +1,9 @@
 ---
 
+sudo_users:
+  - root
+  - letnh
+
 root_ssh_keys:
   - letnh.pub
 
