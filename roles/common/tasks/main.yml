@@ -87,10 +87,6 @@
     group: root
     mode: 0644
 
-- name: install requierd python packages
-  pip:
-    name: netaddr
-
 # Outdate: due to daily cron job
 
 # - name: enable and start logrotate

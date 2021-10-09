@@ -1,0 +1,17 @@
+---
+
+- name: install python 3.9
+  dnf:
+    name: python39
+    state: present
+
+- name: set python 3.9 as default
+  alternatives:
+    name: python
+    path: /usr/bin/python3.9
+
+- name: install requierd python packages
+  pip:
+    name: netaddr
+
+
