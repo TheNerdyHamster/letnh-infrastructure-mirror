@@ -1,8 +1,12 @@
 ---
 
+- name: Debug
+  debug:
+    msg: "{{ ansible_all_ipv4_addresses | ipaddr('10.0.0.0/8') | first }}"
+
 - name: generate postgres filestructure
   file:
-    path: '{{ item.path }}'
+    path: '/containers/postgres/{{ item.path }}'
     state: directory
     owner: '{{ item.owner }}'
     group: '{{ item.group }}'
@@ -10,12 +14,12 @@
     - { path: '/var/lib/postgresql/data', owner: 'root', group: '999' }
 
 - name: deploy postgres container
-  containers.podman.podman_container:
+  docker_container:
     name: postgres
     image: docker.io/library/postgres:13
     restart_policy: always
     ports:
-      - 5432:5432
+      - "{{ ansible_all_ipv4_addresses | ipaddr('10.0.0.0/8') | first }}:5432:5432"
     env:
       POSTGRES_HOST_AUTH_METHOD: scram-sha-256
       POSTGRES_INITDB_ARGS: --auth-host=scram-sha-256
@@ -27,7 +31,7 @@
 - name: create postgres configuration files
   template:
     src: '{{ item }}.j2'
-    dest: /var/lib/postgresql/data/{{ item }}
+    dest: /containers/postgres/var/lib/postgresql/data/{{ item }}
     owner: '999'
     group: '999'
     mode: 0600
@@ -37,8 +41,8 @@
 
 - name: install postgres certificates
   copy:
-    src: /etc/letsencrypt/live/{{ db_domain }}/{{ item.cert }}
-    dest: '{{ item.dest }}'
+    src: /containers/certbot_{{db_domain}}/etc/letsencrypt/live/{{ db_domain }}/{{ item.cert }}
+    dest: '/containers/postgres/{{ item.dest }}'
     remote_src: true
     owner: '999'
     group: '999'
@@ -50,7 +54,7 @@
   when: pg_ssl == 'on'
 
 - name: restart postgres container
-  containers.podman.podman_container:
+  docker_container:
     name: postgres
     state: started
     restart: yes
@@ -69,7 +73,7 @@
 
 - name: Update postgres password
   postgresql_user:
-    login_host: database.letnh.com
+    login_host: 127.0.0.1
     login_user: '{{ pg_user }}'
     login_password: '{{ pg_default_password }}'
     name: '{{ pg_user }}'

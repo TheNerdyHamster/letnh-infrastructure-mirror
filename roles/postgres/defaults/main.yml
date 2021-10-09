@@ -25,5 +25,5 @@ pg_effective_cache_size: '4GB'
 pg_jit: 'on'
 
 # pg_hba.conf
-pg_ssl_hosts_ipv4: []
+pg_ssl_hosts_ipv4: [ '10.0.0.0/24' ]
 pg_ssl_hosts_ipv6: []

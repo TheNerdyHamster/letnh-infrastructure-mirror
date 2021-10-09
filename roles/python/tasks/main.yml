@@ -12,6 +12,8 @@
 
 - name: install requierd python packages
   pip:
-    name: netaddr
+    name: 
+      - netaddr
+      - requests
 
 
