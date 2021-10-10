@@ -1,14 +1,14 @@
 ---
 
-- name: install python 3.9
+- name: install python 3
   dnf:
-    name: python39
+    name: python3
     state: present
 
-- name: set python 3.9 as default
+- name: set python 3 as default
   alternatives:
     name: python
-    path: /usr/bin/python3.9
+    path: /usr/bin/python3
 
 - name: install requierd python packages
   pip:
