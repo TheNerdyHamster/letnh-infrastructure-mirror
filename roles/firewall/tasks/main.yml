@@ -1,22 +1,114 @@
 ---
 
-- name: install firewalld
-  dnf:
-    name: firewalld
+# - name: Disable, stop, & mask firewalld
+#   service:
+#     name: firewalld
+#     enabled: no
+#     state: stopped
+#     masked: yes
+
+- name: Configure sysctl
+  sysctl:
+    name: '{{ item.name }}'
+    value: '{{ item.value }}'
     state: present
+  with_items:
+    # DROP ICMP echo-requests sent to broadcast or multicast
+    - { name: net.ipv4.icmp_echo_ignore_broadcasts, value: 1 } 
+    # Drop source routed packets
+    - { name: net.ipv4.conf.all.accept_source_route, value: 0 }
+    # Enable TCP SYN cookie protection from SYN floods
+    - { name: net.ipv4.tcp_syncookies, value: 1 }
+    # Don't accept ICMP redirect messages
+    - { name: net.ipv4.conf.all.accept_redirects, value: 0 }
+    # Don't send ICMP redirect messages
+    - { name: net.ipv4.conf.all.send_redirects, value: 0 }
+    # Enable source address spoofing protection
+    - { name: net.ipv4.conf.all.rp_filter, value: 1 }
+    # Log packets with impossible source addresses
+    - { name: net.ipv4.conf.all.log_martians, value: 1 }
 
-- name: configure firewalld
-  template:
-    src: firewalld.conf.j2
-    dest: /etc/firewalld/firewalld.conf
-    owner: root
-    group: root
-    mode: 0644
-  notify:
-    - restart firewalld
+- name: flush all chains
+  tags: flush
+  iptables:
+    flush: yes
+  when: false
 
-- name: start & enable firewalld
-  service:
-    name: firewalld
-    enabled: yes
-    state: started
+- name: allow unlimited IN traffic on loopback
+  iptables:
+    chain: INPUT
+    in_interface: lo
+    jump: ACCEPT
+
+- name: allow unlimited OUT traffic on loopback
+  iptables:
+    chain: OUTPUT
+    out_interface: lo
+    jump: ACCEPT
+
+- name: allow unlimited outbound traffic [IN]
+  iptables:
+    chain: INPUT
+    match: state
+    ctstate: ESTABLISHED,RELATED
+    jump: ACCEPT
+ 
+- name: allow unlimited outbound traffic [OUT]
+  iptables:
+    chain: OUTPUT
+    match: state
+    ctstate: NEW,ESTABLISHED,RELATED
+    jump: ACCEPT
+
+- name: set default policy to DROP
+  iptables:
+    chain: "{{ item }}"
+    policy: DROP
+  with_items:
+    - "INPUT"
+    - "OUTPUT"
+    - "FORWARD"
+
+- name: allow SSH connections over port 22
+  iptables:
+    chain: INPUT
+    protocol: tcp
+    destination_port: '22'
+    match: state
+    ctstate: NEW
+    jump: ACCEPT
+
+- name: allow common imcp types such as [PING, MTU, TTL]
+  iptables:
+    chain: INPUT
+    protocol: icmp
+    icmp_type: '{{ item }}'
+    match: state
+    ctstate: NEW,ESTABLISHED,RELATED
+    jump: ACCEPT
+  with_items:
+    - 8/0
+    - 3/4
+    - 11/0
+
+- name: drop all other traffic
+  iptables:
+    chain: INPUT
+    jump: DROP
+
+# - name: Rate limit to 4 SSH connections per 60 sec
+#   iptables:
+#     chain: INPUT
+#     protocol: tcp
+#     destination_port: '22'
+#     match: 
+#       - state
+#       - recent
+#     ctstate: NEW
+#     limit: 60/second
+#     limit_burst: '4'
+#     jump: DROP
+
+
+
+
