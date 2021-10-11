@@ -9,6 +9,7 @@
       - tree
       - sysstat
       - tcpdump
+      - traceroute
       - vnstat
       - ncdu
       - zsh
