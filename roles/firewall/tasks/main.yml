@@ -1,11 +1,15 @@
 ---
 
-# - name: Disable, stop, & mask firewalld
-#   service:
-#     name: firewalld
-#     enabled: no
-#     state: stopped
-#     masked: yes
+- name: Populate service facts
+  service_facts:
+
+- name: Disable, stop, & mask firewalld
+  service:
+    name: firewalld
+    enabled: no
+    state: stopped
+    masked: yes
+  when: "'firewalld.service' in services"
 
 - name: Configure sysctl
   sysctl:
