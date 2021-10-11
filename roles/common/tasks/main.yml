@@ -4,6 +4,14 @@
   hostname:
     name: "{{ inventory_hostname }}.{{ domain }}"
 
+- name: deploy resolv.conf
+  template:
+    src: resolv.conf.j2
+    dest: /etc/resolv.conf
+    owner: root
+    group: root
+    mode: 0644
+
 - name: add epel & update package cache
   dnf:
     name: epel-release 
