@@ -100,19 +100,18 @@
     chain: INPUT
     jump: DROP
 
-# - name: Rate limit to 4 SSH connections per 60 sec
-#   iptables:
-#     chain: INPUT
-#     protocol: tcp
-#     destination_port: '22'
-#     match: 
-#       - state
-#       - recent
-#     ctstate: NEW
-#     limit: 60/second
-#     limit_burst: '4'
-#     jump: DROP
+- name: save current state
+  community.general.iptables_state:
+    state: saved
+    path: /etc/sysconfig/iptables_saved
 
-
+- name: copy ifup-post script to hosts
+  copy:
+    src: ifup-post
+    dest: /etc/sysconfig/network-scripts/ifup-post
+    remote_src: no
+    owner: root
+    group: root
+    mode: 0755
 
 
