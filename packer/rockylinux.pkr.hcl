@@ -1,5 +1,6 @@
 variable "hcloud_token" {
   type      = string
+  default   = "${env("HCLOUD_TOKEN")}"
   sensitive = true
 }
 
