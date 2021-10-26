@@ -3,6 +3,11 @@ variable "hcloud_token" {
   sensitive = true
 }
 
+variable "hetzner_dns_token" {
+  type = string
+  sensitive = true
+}
+
 variable "network_range" {
   type        = string
   description = "Private network range"
