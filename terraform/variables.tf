@@ -60,6 +60,12 @@ variable "dns_zone" {
 }
 
 locals {
+  dns_records_ns = [
+    "hydrogen.ns.hetzner.com.",
+    "oxygen.ns.hetzner.com.",
+    "helium.ns.hetzner.de."
+  ]
+
   dns_records_txt = [
     {
       name  = "_dmarc"
