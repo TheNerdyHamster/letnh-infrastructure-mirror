@@ -5,7 +5,7 @@ terraform {
       version = "~> 1.31.0"
     }
     hetznerdns = {
-      source = "timohirt/hetznerdns"
+      source  = "timohirt/hetznerdns"
       version = "~> 1.1.1"
     }
   }

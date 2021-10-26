@@ -1,13 +1,15 @@
+# Provider variabels
 variable "hcloud_token" {
   type      = string
   sensitive = true
 }
 
 variable "hetzner_dns_token" {
-  type = string
+  type      = string
   sensitive = true
 }
 
+# Hetzner Variables & Locals
 variable "network_range" {
   type        = string
   description = "Private network range"
@@ -45,7 +47,31 @@ locals {
   volumes = [
     {
       server = "letnh.com"
-      size = 10
+      size   = 10
+    }
+  ]
+}
+
+# DNS Variable & Locals
+variable "dns_zone" {
+  type        = string
+  description = "Hetzner DNS zone"
+  default     = "letnh.xyz"
+}
+
+locals {
+  dns_records_txt = [
+    {
+      name  = "_dmarc"
+      value = "v=DMARC1; p=none"
+    },
+    {
+      name  = "@"
+      value = "v=spf1 include:_spf.protonmail.ch mx ~all"
+    },
+    {
+      name  = "@"
+      value = "protonmail-verification=878b291be27fab4e9303fcd939dac61bc95c740c"
     }
   ]
 }
