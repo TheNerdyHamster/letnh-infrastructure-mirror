@@ -80,4 +80,6 @@ locals {
       value = "protonmail-verification=878b291be27fab4e9303fcd939dac61bc95c740c"
     }
   ]
+
+  dns_records_caa = "0 issue \"letsencrypt.org\""
 }

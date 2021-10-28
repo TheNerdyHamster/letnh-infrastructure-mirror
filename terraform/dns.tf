@@ -20,3 +20,11 @@ resource "hetznerdns_record" "ns" {
   value   = each.key
   type    = "NS"
 }
+
+resource "hetznerdns_record" "caa" {
+  zone_id = hetznerdns_zone.dns_zone.id
+  name    = "@"
+  value   = local.dns_records_caa
+  type    = "CAA"
+}
+
