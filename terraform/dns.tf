@@ -28,3 +28,11 @@ resource "hetznerdns_record" "caa" {
   type    = "CAA"
 }
 
+resource "hetznerdns_record" "mx" {
+  for_each = { for mx in local.dns_records_mx : mx.value => mx }
+  zone_id = hetznerdns_zone.dns_zone.id
+  name    = each.value.name
+  value   = each.value.value
+  type    = "MX"
+}
+

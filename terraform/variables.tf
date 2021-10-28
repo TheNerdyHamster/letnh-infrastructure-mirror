@@ -81,5 +81,16 @@ locals {
     }
   ]
 
+  dns_records_mx = [
+    {
+      name  = "@"
+      value = "10 mail.protonmail.ch."
+    },
+    {
+      name  = "@"
+      value = "20 mailsec.protonmail.ch."
+    }
+  ]
+
   dns_records_caa = "0 issue \"letsencrypt.org\""
 }
