@@ -9,12 +9,13 @@ resource "hcloud_network_subnet" "network_subnet" {
   network_zone = "eu-central"
   ip_range     = var.network_subnet_range
 }
+
 resource "hcloud_server" "server" {
-  for_each = local.servers
+  for_each = var.servers
 
   name        = each.key
   image       = data.hcloud_image.rocky-8-base.id
-  server_type = each.value.server_type
+  server_type = each.value.type
   ssh_keys    = [data.hcloud_ssh_key.root_ssh_key.id]
 
   network {
@@ -30,16 +31,16 @@ resource "hcloud_server" "server" {
 }
 
 resource "hcloud_volume" "volume" {
-  for_each = { for volume in local.volumes : volume.server => volume }
+  for_each = var.servers
 
   name      = "${each.key}-volume"
   server_id = hcloud_server.server[each.key].id
-  size      = each.value.size
+  size      = each.value.volume_size
   format    = var.volume_format
 }
 
 resource "hcloud_rdns" "rdns4" {
-  for_each = local.servers
+  for_each = var.servers
 
   server_id  = hcloud_server.server[each.key].id
   ip_address = hcloud_server.server[each.key].ipv4_address
@@ -47,7 +48,7 @@ resource "hcloud_rdns" "rdns4" {
 }
 
 resource "hcloud_rdns" "rdns6" {
-  for_each = local.servers
+  for_each = var.servers
 
   server_id  = hcloud_server.server[each.key].id
   ip_address = hcloud_server.server[each.key].ipv6_address

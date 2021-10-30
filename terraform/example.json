@@ -1,0 +1,37 @@
+{
+  "servers": {
+    "letnh.xyz": {
+      "type": "cx11",
+      "internal_ip": "10.0.0.2",
+      "domain": "@",
+      "volume_size": 10
+    }
+  },
+  "dns_zone": "letnh.xyz",
+  "dns_records": [
+    {
+      "name": "@",
+      "value": "hydrogen.ns.hetzner.com.",
+      "ttl": null,
+      "type": "NS"
+    },
+    {
+      "name": "@",
+      "value": "oxygen.ns.hetzner.com.",
+      "ttl": null,
+      "type": "NS"
+    },
+    {
+      "name": "@",
+      "value": "helium.ns.hetzner.de.",
+      "ttl": null,
+      "type": "NS"
+    },
+    {
+      "name": "@",
+      "value": "0 issue \"letsencrypt.org\"",
+      "ttl": null,
+      "type": "CAA"
+    }
+  ]
+}

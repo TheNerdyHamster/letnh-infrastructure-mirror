@@ -3,36 +3,30 @@ resource "hetznerdns_zone" "dns_zone" {
   ttl  = 86400
 }
 
-resource "hetznerdns_record" "txt" {
-  for_each = { for txt in local.dns_records_txt : txt.value => txt }
+resource "hetznerdns_record" "records" {
+  for_each = { for record in var.dns_records : record.value => record }
 
   zone_id = hetznerdns_zone.dns_zone.id
   name    = each.value.name
   value   = each.value.value
-  type    = "TXT"
+  ttl     = each.value.ttl
+  type    = each.value.type
 }
 
-resource "hetznerdns_record" "ns" {
-  for_each = { for ns in local.dns_records_ns : ns => ns }
+resource "hetznerdns_record" "server_a_records" {
+  for_each = var.servers
 
   zone_id = hetznerdns_zone.dns_zone.id
-  name    = "@"
-  value   = each.key
-  type    = "NS"
+  name    = each.value.domain
+  value   = hcloud_server.server[each.key].ipv4_address
+  type    = "A"
 }
 
-resource "hetznerdns_record" "caa" {
+resource "hetznerdns_record" "server_aaaa_records" {
+  for_each = var.servers
+
   zone_id = hetznerdns_zone.dns_zone.id
-  name    = "@"
-  value   = local.dns_records_caa
-  type    = "CAA"
+  name    = each.value.domain
+  value   = hcloud_server.server[each.key].ipv6_address
+  type    = "AAAA"
 }
-
-resource "hetznerdns_record" "mx" {
-  for_each = { for mx in local.dns_records_mx : mx.value => mx }
-  zone_id = hetznerdns_zone.dns_zone.id
-  name    = each.value.name
-  value   = each.value.value
-  type    = "MX"
-}
-
