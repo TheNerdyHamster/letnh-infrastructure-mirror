@@ -1,0 +1,36 @@
+---
+
+- name: generate nextcloud filestructure
+  file:
+    path: '{{ item.path }}'
+    state: directory
+    owner: '{{ item.owner }}'
+    group: '{{ item.group }}'
+  with_items:
+    - { path: '/var/www/html', owner: 'root', group: 'root' }
+
+- name: run podman container
+  containers.podman.podman_container:
+    name: nextcloud
+    image: docker.io/library/nextcloud
+      #:22.1-fpm-alpine
+    restart_policy: always
+    ports:
+      - 8080:80
+    volumes:
+      - /var/www/html:/var/www/html
+
+- name: Configure nextcloud
+  template:
+    src: config.php.j2
+    dest: /var/www/html/config/config.php
+    owner: root
+    group: root
+    mode: 666
+
+- name: configure firewalld
+  firewalld:
+    zone: public
+    port: 8080/tcp
+    permanent: yes
+    state: enabled

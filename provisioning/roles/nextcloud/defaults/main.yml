@@ -1,0 +1,22 @@
+---
+
+# Database
+nextcloud_db_type: sqlite
+nextcloud_db_host: ''
+nextcloud_db_name: 'nextcloud'
+nextcloud_db_user: ''
+nextcloud_db_password: ''
+nextcloud_db_table_prefix: 'oc_'
+
+# General User Experience
+nextcloud_default_language: 'en'
+nextcloud_default_locale: 'en_US'
+nextcloud_default_phone_region: 'GB'
+nextcloud_default_apps: 'dashboard,files'
+nextcloud_knowledgebaseenabled: true
+nextcloud_allow_user_to_change_display_name: true
+
+nextcloud_token_auth_enforced: false
+
+# Proxy
+
