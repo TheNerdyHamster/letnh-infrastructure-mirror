@@ -1,0 +1,10 @@
+---
+- name: Reencrypt vault
+  hosts: localhost
+  tasks:
+    - name: Reencrypt vault keys
+      tags: gpg
+      shell: |
+        set -o pipefail && gpg --decrypt --batch --quiet "{{ playbook_dir }}/../../misc/vault_passphrase.gpg" |
+        gpg --batch --armor --encrypt --output - {% for key in root_gpg_keys %}--recipient {{ key }} {% endfor %} | sponge "{{ playbook_dir }}/../../misc/vault_passphrase.gpg"
+      changed_when: false

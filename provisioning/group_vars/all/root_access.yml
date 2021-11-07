@@ -7,5 +7,5 @@ sudo_users:
 root_ssh_keys:
   - letnh.pub
 
-root_gpgkeys:
-  - 
+root_gpg_keys:
+  - 034128673C36E8428D8A14477BE8284C0425D303
