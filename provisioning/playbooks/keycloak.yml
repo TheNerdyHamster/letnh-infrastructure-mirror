@@ -1,6 +1,0 @@
----
-- name: Setup keycloak instace for testing
-  hosts: auth
-  remote_user: root
-  roles:
-    - { role: keycloak }
