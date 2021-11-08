@@ -1,8 +1,0 @@
----
-- name: nextcloud setup
-  hosts: nextcloud
-  remote_user: root
-  roles:
-    - { role: podman }
-    - { role: certbot, cert_domain: 'nextcloud.{{ domain }}' }
-    - { role: nextcloud }
