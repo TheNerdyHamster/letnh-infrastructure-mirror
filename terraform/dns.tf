@@ -19,6 +19,7 @@ resource "hetznerdns_record" "server_a_records" {
   zone_id = hetznerdns_zone.dns_zone.id
   name    = each.value.domain
   value   = hcloud_server.server[each.key].ipv4_address
+  ttl     = 1800
   type    = "A"
 }
 
@@ -28,5 +29,6 @@ resource "hetznerdns_record" "server_aaaa_records" {
   zone_id = hetznerdns_zone.dns_zone.id
   name    = each.value.domain
   value   = hcloud_server.server[each.key].ipv6_address
+  ttl     = 1800
   type    = "AAAA"
 }
