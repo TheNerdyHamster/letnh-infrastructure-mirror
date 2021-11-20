@@ -31,11 +31,11 @@ resource "hcloud_server" "server" {
 }
 
 resource "hcloud_volume" "volume" {
-  for_each = var.servers
+  for_each = var.volumes
 
   name      = "${each.key}-volume"
   server_id = hcloud_server.server[each.key].id
-  size      = each.value.volume_size
+  size      = each.value.size
   format    = var.volume_format
 }
 

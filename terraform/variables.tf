@@ -33,7 +33,12 @@ variable "servers" {
     type        = string
     internal_ip = string
     domain      = string
-    volume_size = number
+  }))
+}
+
+variable "volumes" {
+  type = map(object({
+    size = number
   }))
 }
 
