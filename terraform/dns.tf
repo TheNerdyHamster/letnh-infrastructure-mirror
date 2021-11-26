@@ -14,21 +14,21 @@ resource "hetznerdns_record" "records" {
 }
 
 resource "hetznerdns_record" "server_a_records" {
-  for_each = var.servers
+  for_each = { for record in var.server_records : record.domain => record }
 
   zone_id = hetznerdns_zone.dns_zone.id
   name    = each.value.domain
-  value   = hcloud_server.server[each.key].ipv4_address
+  value   = hcloud_server.server[each.value.server].ipv4_address
   ttl     = 1800
   type    = "A"
 }
 
 resource "hetznerdns_record" "server_aaaa_records" {
-  for_each = var.servers
+  for_each = { for record in var.server_records : record.domain => record }
 
   zone_id = hetznerdns_zone.dns_zone.id
   name    = each.value.domain
-  value   = hcloud_server.server[each.key].ipv6_address
+  value   = hcloud_server.server[each.value.server].ipv6_address
   ttl     = 1800
   type    = "AAAA"
 }

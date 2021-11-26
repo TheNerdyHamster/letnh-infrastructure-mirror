@@ -32,7 +32,14 @@ variable "servers" {
   type = map(object({
     type        = string
     internal_ip = string
-    domain      = string
+#    domain      = string
+  }))
+}
+
+variable "server_records" {
+  type = list(object({
+    server = string
+    domain = string
   }))
 }
 
