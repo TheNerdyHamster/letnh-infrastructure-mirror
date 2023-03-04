@@ -5,7 +5,7 @@ groups:
 
 users:
   letnh:
-    name: "Leo Rönnebro"
+    name: "Leo Olofsson"
     ssh_key: letnh.pub
     groups: []
 
