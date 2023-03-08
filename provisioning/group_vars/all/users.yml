@@ -3,9 +3,19 @@
 # Default groups
 groups:
 
+# Users with access to specific hosts
+# Example:
+# users:
+#   example: # This is the username
+#     name: "First and lastname of user"
+#     ssh_key: "SSH-Key for the specific user"
+#     groups: 
+#       - "Groups user should be added to"
+#     hosts:
+#       - "Hosts the user should have access to, if none is specified all hosts are included"
+
 users:
   letnh:
     name: "Leo Olofsson"
     ssh_key: letnh.pub
     groups: []
-
