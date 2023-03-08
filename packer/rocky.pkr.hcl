@@ -30,7 +30,7 @@ source "proxmox-iso" "rocky-kickstart" {
   communicator = "ssh"
   boot_command = ["<up><tab> ip=dhcp inst.cmdline inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/rocky-ks.cfg<enter>"]
   boot_wait = "10s"
-  http_directory = "config"
+  http_directory = "packer/config"
   http_port_min = 8443
   http_port_max = 8443
   node = "${var.node}"
@@ -45,9 +45,9 @@ source "proxmox-iso" "rocky-kickstart" {
     format = "qcow2"
   }
   sockets = 1
-  cores = 2
+  cores = 4
   cpu_type = "host"
-  memory = 2048
+  memory = 4096
   network_adapters {
     bridge = "vmbr1"
     model = "virtio"
@@ -71,5 +71,16 @@ source "proxmox-iso" "rocky-kickstart" {
 }
 
 build {
-    sources = ["source.proxmox-iso.rocky-kickstart"]
+  sources = ["source.proxmox-iso.rocky-kickstart"]
+
+  provisioner "ansible" {
+    playbook_file = "provisioning/playbooks/tasks/base_image.yml"
+    host_alias = "rocky-9.1-base"
+    use_proxy = false
+    extra_arguments = ["-e ansible_ssh_pass=packer"]
+    ansible_env_vars = [
+      "ANSIBLE_SSH_ARGS='-oHostKeyAlgorithms=+ssh-rsa -oPubkeyAcceptedKeyTypes=ssh-rsa'",
+      "ANSIBLE_HOST_KEY_CHECKING=False"
+    ]
+  }
 }
