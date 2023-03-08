@@ -46,15 +46,15 @@
 
 - name: configure timezone
   timezone:
-    name: 'Europe/Stockholm'
+    name: '{{ timezone }}'
 
-- name: generate ssh key for root user
-  openssh_keypair:
-    path: "/root/.ssh/id_rsa"
-    type: rsa
-    size: 4096
-    state: present
-    force: no
+# - name: generate ssh key for root user
+#   openssh_keypair:
+#     path: "/root/.ssh/id_rsa"
+#     type: rsa
+#     size: 4096
+#     state: present
+#     force: no
 
 - name: configure journald
   template:
