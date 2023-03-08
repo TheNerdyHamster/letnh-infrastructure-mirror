@@ -25,3 +25,15 @@
     owner: root
     group: root
     mode: 0644
+
+- name: Open firewall ports
+  tags:
+    - firewall
+  firewalld:
+    service: ssh
+    permanent: true
+    state: enabled
+    immediate: yes
+  when:
+    configure_firewall is defined and configure_firewall
+  

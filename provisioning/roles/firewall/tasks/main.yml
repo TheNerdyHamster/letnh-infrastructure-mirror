@@ -1,15 +1,32 @@
 ---
 
-- name: Populate service facts
-  service_facts:
+- name: Install firewalld
+  dnf:
+    name: firewalld
+    state: present
 
-- name: Disable, stop, & mask firewalld
+- name: Install firewalld configuration
+  template:
+    src: firewalld.conf.j2
+    dest: /etc/firewalld/firewalld.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - Restart firewalld
+
+- name: Start and enable firewalld
   service:
     name: firewalld
-    enabled: no
-    state: stopped
-    masked: yes
-  when: "'firewalld.service' in services"
+    enabled: "{{ configure_firewall }}"
+    state: "{{ configure_firewall | ternary('started', 'stopped') }}"
+
+- name: Disable default dhcpv6-client rule
+  firewalld:
+    service: dhcpv6-client
+    state: disabled
+    immediate: true
+  when: configure_firewall
 
 - name: Configure sysctl
   sysctl:
@@ -31,87 +48,3 @@
     - { name: net.ipv4.conf.all.rp_filter, value: 1 }
     # Log packets with impossible source addresses
     - { name: net.ipv4.conf.all.log_martians, value: 1 }
-
-- name: flush all chains
-  tags: flush
-  iptables:
-    flush: yes
-  when: false
-
-- name: allow unlimited IN traffic on loopback
-  iptables:
-    chain: INPUT
-    in_interface: lo
-    jump: ACCEPT
-
-- name: allow unlimited OUT traffic on loopback
-  iptables:
-    chain: OUTPUT
-    out_interface: lo
-    jump: ACCEPT
-
-- name: allow unlimited outbound traffic [IN]
-  iptables:
-    chain: INPUT
-    match: state
-    ctstate: ESTABLISHED,RELATED
-    jump: ACCEPT
- 
-- name: allow unlimited outbound traffic [OUT]
-  iptables:
-    chain: OUTPUT
-    match: state
-    ctstate: NEW,ESTABLISHED,RELATED
-    jump: ACCEPT
-
-- name: set default policy to DROP
-  iptables:
-    chain: "{{ item }}"
-    policy: DROP
-  with_items:
-    - "INPUT"
-    - "OUTPUT"
-    - "FORWARD"
-
-- name: allow SSH connections over port 22
-  iptables:
-    chain: INPUT
-    protocol: tcp
-    destination_port: '22'
-    match: state
-    ctstate: NEW
-    jump: ACCEPT
-
-- name: allow common imcp types such as [PING, MTU, TTL]
-  iptables:
-    chain: INPUT
-    protocol: icmp
-    icmp_type: '{{ item }}'
-    match: state
-    ctstate: NEW,ESTABLISHED,RELATED
-    jump: ACCEPT
-  with_items:
-    - 8/0
-    - 3/4
-    - 11/0
-
-- name: drop all other traffic
-  iptables:
-    chain: INPUT
-    jump: DROP
-
-- name: save current state
-  community.general.iptables_state:
-    state: saved
-    path: /etc/sysconfig/iptables_saved
-
-- name: copy ifup-post script to hosts
-  copy:
-    src: ifup-post
-    dest: /etc/sysconfig/network-scripts/ifup-post
-    remote_src: no
-    owner: root
-    group: root
-    mode: 0755
-
-

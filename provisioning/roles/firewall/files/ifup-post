@@ -1,4 +1,0 @@
-#!/bin/bash
-echo ${DEVICE} > /root/device
-if [ -x /sbin/ifup-local ]; then
-  /sbin/ifup-local ${DEVICE}
