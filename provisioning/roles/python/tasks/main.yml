@@ -5,9 +5,15 @@
     name: python3
     state: present
 
+- name: install python3-pip
+  dnf:
+    name: python3-pip
+    state: present
+
 - name: set python 3 as default
   alternatives:
     name: python
+    link: /usr/bin/python
     path: /usr/bin/python3
 
 - name: install requierd python packages
