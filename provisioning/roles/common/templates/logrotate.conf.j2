@@ -12,17 +12,3 @@ create
 compress
 
 include /etc/logrotate.d
-
-/var/log/wtmp {
-    missingok
-    monthly
-    create 0600 root utmp
-    rotate 1
-}
-
-/var/log/btmp {
-    missingok
-    monthly
-    create 0600 root utmp
-    rotate 1
-}
