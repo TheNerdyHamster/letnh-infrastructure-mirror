@@ -6,6 +6,10 @@
     - ../../group_vars/all/common.yml
     - ../../group_vars/all/root_access.yml
     - ../../group_vars/all/users.yml
+
+  vars:
+    - packer: yes
+
   roles:
     - { role: python }
     - { role: common }

@@ -48,13 +48,14 @@
   timezone:
     name: '{{ timezone }}'
 
-# - name: generate ssh key for root user
-#   openssh_keypair:
-#     path: "/root/.ssh/id_rsa"
-#     type: rsa
-#     size: 4096
-#     state: present
-#     force: no
+- name: generate ssh key for root user
+  openssh_keypair:
+    path: "/root/.ssh/id_rsa"
+    type: rsa
+    size: 4096
+    state: present
+    force: no
+  when: packer is undefined
 
 - name: configure journald
   template:
