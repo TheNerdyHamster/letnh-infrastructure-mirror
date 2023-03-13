@@ -1,0 +1,93 @@
+---
+
+# Systemd wont stop service auditd,
+# check if sysvinit module can be used instead of command.
+- name: Stop logging services
+  command: service {{ item }} stop
+  # sysvinit:
+  #   name: '{{ item }}'
+  #   state: stopped
+  with_items:
+    - rsyslog
+    - auditd
+
+- name: Clean dnf
+  shell: dnf clean all
+
+- name: Force logs to rotate
+  shell: logrotate -f /etc/logrotate.conf
+
+- name: Find logs to delete
+  find:
+    paths: /var/log
+    patterns: 
+      - 'dnf.*log'
+      - '*.gz'
+      - 'dmesg.old'
+      - 'sa*'
+      - 'anaconda'
+    recurse: yes
+  register: log_files
+
+- name: Delete log files
+  file:
+    path: '{{ item.path }}'
+    state: absent
+  with_items: '{{ log_files.files }}'
+
+- name: Truncate logs
+  community.general.filesize:
+    size: 0B
+    path: /var/log/{{ item }}
+  with_items:
+    - wtmp
+    - lastlog
+    - grubby
+    - audit/audit.log
+    - kdump.log # Remove rather then save
+    - everything.log
+
+- name: Remove old MAC Addresses and UUIDs
+  lineinfile:
+    path: /etc/NetworkManager/system-connections/ens18.nmconnection
+    regexp: '^uuid=.*'
+    line: uuid
+
+- name: Clean tmp directories
+  file:
+    state: absent
+    path: '/var/tmp'
+
+- name: Find all SSH host keys.
+  find:
+    paths: /etc/ssh/
+    patterns: "ssh_host*"
+    recurse: no
+  register: ssh_keys
+
+- name: Delete SSH host keys.
+  file:
+    path: '{{ item.path }}'
+    state: absent
+  with_items: '{{ ssh_keys.files }}'
+
+- name: Delete bash history
+  file:
+    path: /root/.bash_history
+    state: absent
+
+- name: Unset histfile
+  shell: unset HISTFILE
+
+- name: Find all anaconda template files
+  find:
+    paths: /root/
+    patterns: "*.cfg"
+    recurse: no
+  register: root_anaconda
+
+- name: Remove anaconda files
+  file:
+    path: '{{ item.path }}'
+    state: absent
+  with_items: '{{ root_anaconda.files }}'
