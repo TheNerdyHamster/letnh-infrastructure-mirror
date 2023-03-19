@@ -28,7 +28,7 @@ variable "node" {
 source "proxmox-iso" "rocky-kickstart" {
   #boot_command = ["<up><enter>"]
   communicator = "ssh"
-  boot_command = ["<up><tab> ip=dhcp inst.cmdline inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/rocky-ks.cfg<enter>"]
+  boot_command = ["<up><tab> ip=dhcp inst.cmdline inst.ks=https://git.sr.ht/~thenerdyhamster/infrastructure/blob/main/packer/config/rocky-ks.cfg<enter>"]
   boot_wait = "10s"
   http_directory = "packer/config"
   http_port_min = 8443
