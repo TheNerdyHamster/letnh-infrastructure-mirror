@@ -90,6 +90,7 @@
   <general t="map">
     <mode t="map">
       <confirm t="boolean">false</confirm>
+      <final_reboot t="boolean">true</final_reboot>
     </mode>
   </general>
   <groups t="list">
