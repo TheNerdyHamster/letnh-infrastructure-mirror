@@ -1,6 +1,6 @@
 ---
 - name: install sys, devops & utils tools
-  dnf:
+  package:
     name:
       - nmap
       - net-tools

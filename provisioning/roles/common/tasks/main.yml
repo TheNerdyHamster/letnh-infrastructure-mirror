@@ -22,21 +22,21 @@
     group: root
     mode: 0644
 
-- name: add epel & update package cache
-  dnf:
-    name: epel-release 
-    state: latest
-    update_cache: yes
+# - name: add epel & update package cache
+#   dnf:
+#     name: epel-release 
+#     state: latest
+#     update_cache: yes
 
 - name: update all packages
-  dnf:
+  package:
     name: "*"
     state: latest
 
+## Put package into variable
 - name: install auditd
-  dnf:
-    name: 
-      - audispd-plugins
+  package:
+    name: audit-audispd-plugins
 
 - name: enable and start auditd
   service:
@@ -70,7 +70,7 @@
     - restart journald
 
 - name: install logrotate
-  dnf:
+  package:
     name: logrotate
     state: present
 
@@ -89,5 +89,3 @@
 #     name: logrotate.timer
 #     enabled: yes
 #     state: started
-
-
