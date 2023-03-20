@@ -277,6 +277,7 @@
         <service>sshd</service>
         <service>systemd-pstore</service>
         <service>systemd-remount-fs</service>
+        <service>qemu-guest-agent</service>
       </enable>
     </services>
   </services-manager>
