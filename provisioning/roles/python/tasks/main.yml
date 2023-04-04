@@ -7,16 +7,21 @@
 
 - name: install python3-pip
   package:
-    name: python3-pip
+    name: py3-pip
     state: present
+
+# - name: Gather facts
+#   debug:
+#     var: ansible_facts.os_family
 
 - name: set python 3 as default
   alternatives:
     name: python
     link: /usr/bin/python
     path: /usr/bin/python3
+  when: ansible_os_family != "Alpine"
 
-- name: install requierd python packages
+- name: install required python packages
   pip:
     name: 
       - netaddr

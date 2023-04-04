@@ -4,39 +4,21 @@
   hostname:
     name: "{{ inventory_hostname }}.{{ domain }}"
 
-- name: disable NetworkManager generating resolv.conf
-  template:
-    src: 90-dns-none.conf.j2
-    dest: /etc/NetworkManager/conf.d/90-dns-none.conf
-    owner: root
-    group: root
-    mode: 0644
-  notify:
-    - restart NetworkManager
-
-- name: deploy resolv.conf
-  template:
-    src: resolv.conf.j2
-    dest: /etc/resolv.conf
-    owner: root
-    group: root
-    mode: 0644
-
-# - name: add epel & update package cache
-#   dnf:
-#     name: epel-release 
-#     state: latest
-#     update_cache: yes
-
 - name: update all packages
   package:
     name: "*"
     state: latest
+  when: ansible_os_family != "Alpine"
 
-## Put package into variable
+- name: upgrade all packages
+  apk:
+    upgrade: yes
+  when: ansible_os_family == "Alpine"
+
+  # If multiple distros are used put this into variable
 - name: install auditd
   package:
-    name: audit-audispd-plugins
+    name: audit
 
 - name: enable and start auditd
   service:
@@ -68,6 +50,7 @@
     - journald.conf
   notify:
     - restart journald
+  when: ansible_facts.service_mgr == "systemd"
 
 - name: install logrotate
   package:

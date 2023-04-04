@@ -35,5 +35,6 @@
     state: enabled
     immediate: yes
   when:
-    configure_firewall is defined and configure_firewall
+    - ansible_os_family != "Alpine"
+    - configure_firewall is defined and configure_firewall
   

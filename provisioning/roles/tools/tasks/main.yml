@@ -21,6 +21,6 @@
 
 - name: start & enable vnstatd
   service:
-    name: vnstat
+    name: vnstatd
     enabled: yes
     state: started

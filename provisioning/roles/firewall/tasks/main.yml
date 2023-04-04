@@ -1,32 +1,32 @@
 ---
 
-- name: Install firewalld
-  package:
-    name: firewalld
-    state: present
+# - name: Install firewalld
+#   package:
+#     name: firewalld
+#     state: present
 
-- name: Install firewalld configuration
-  template:
-    src: firewalld.conf.j2
-    dest: /etc/firewalld/firewalld.conf
-    owner: root
-    group: root
-    mode: 0644
-  notify:
-    - Restart firewalld
+# - name: Install firewalld configuration
+#   template:
+#     src: firewalld.conf.j2
+#     dest: /etc/firewalld/firewalld.conf
+#     owner: root
+#     group: root
+#     mode: 0644
+#   notify:
+#     - Restart firewalld
 
-- name: Start and enable firewalld
-  service:
-    name: firewalld
-    enabled: "{{ configure_firewall }}"
-    state: "{{ configure_firewall | ternary('started', 'stopped') }}"
+# - name: Start and enable firewalld
+#   service:
+#     name: firewalld
+#     enabled: "{{ configure_firewall }}"
+#     state: "{{ configure_firewall | ternary('started', 'stopped') }}"
 
-- name: Disable default dhcpv6-client rule
-  firewalld:
-    service: dhcpv6-client
-    state: disabled
-    immediate: true
-  when: configure_firewall
+# - name: Disable default dhcpv6-client rule
+#   firewalld:
+#     service: dhcpv6-client
+#     state: disabled
+#     immediate: true
+#   when: configure_firewall
 
 - name: Configure sysctl
   sysctl:

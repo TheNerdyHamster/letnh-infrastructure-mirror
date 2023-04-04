@@ -44,7 +44,7 @@ source "proxmox-iso" "alpine-builder" {
     "${var.ssh_password}<enter><wait>",
     "${var.ssh_password}<enter><wait>",
     "<enter><wait5>",
-    "apk add -u sed qemu-guest-agent<enter><wait10>",
+    "apk add -u sed qemu-guest-agent python3<enter><wait10>",
     "rc-update add qemu-guest-agent<enter><wait>",
     "sed -i -e 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config<enter><wait>",
     "export ROOTFS=btrfs<enter>",

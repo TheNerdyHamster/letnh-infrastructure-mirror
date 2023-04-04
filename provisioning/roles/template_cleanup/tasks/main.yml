@@ -4,9 +4,6 @@
 # check if sysvinit module can be used instead of command.
 - name: Stop logging services
   command: service {{ item }} stop
-  # sysvinit:
-  #   name: '{{ item }}'
-  #   state: stopped
   with_items:
     - rsyslog
     - auditd
