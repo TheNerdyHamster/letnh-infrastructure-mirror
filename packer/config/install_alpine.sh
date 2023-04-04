@@ -11,4 +11,4 @@ sed -i -e 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/s
 
 ### Setup disks
 export ROOTFS=btrfs
-setup-disk -m sys -s 0 /mnt
+setup-disk -m sys -s 0 /dev/sda
