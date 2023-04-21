@@ -48,7 +48,7 @@ source "proxmox-iso" "alpine-builder" {
     "rc-update add qemu-guest-agent<enter><wait>",
     "sed -i -e 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config<enter><wait>",
     "export ROOTFS=btrfs<enter>",
-    "echo 'y' | setup-disk -m sys -s 0 /dev/sda<enter><wait60>",
+    "echo 'y' | setup-disk -m sys -s 0 /dev/sda<enter><wait40>",
     "reboot<enter>"
   ]
   boot_wait = "10s"
