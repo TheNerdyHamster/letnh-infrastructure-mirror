@@ -17,3 +17,4 @@
     - { role: firewall }
     - { role: sshd }
     - { role: root }
+    - { role: tiny-cloud }

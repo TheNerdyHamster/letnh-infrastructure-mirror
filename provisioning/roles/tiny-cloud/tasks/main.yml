@@ -1,0 +1,28 @@
+---
+
+- name: Install Cloud Init
+  package:
+    name: tiny-cloud-{{ tiny_cloud_provider }}
+
+- name: Enable cloud init
+  service:
+    name: '{{ item.service }}'
+    enabled: true
+    runlevel: '{{ item.runlevel }}'
+  with_items: '{{ tiny_cloud_init }}'
+
+- name: Deploy cloud.cfg
+  template:
+    src: tiny-cloud.j2
+    dest: /etc/conf.d/tiny-cloud
+    owner: root
+    group: root
+    mode: '644'
+
+- name: Update /bin/imds variables for proxmox cloud-init
+  lineinfile:
+    path: /bin/imds
+    regexp: '{{ item.regexp }}'
+    line: '{{ item.line }}'
+    backrefs: yes
+  with_items: '{{ tiny_cloud_imds_vars }}'

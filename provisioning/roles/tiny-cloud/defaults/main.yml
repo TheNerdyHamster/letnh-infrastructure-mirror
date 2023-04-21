@@ -1,0 +1,18 @@
+---
+tiny_cloud_provider: nocloud
+tiny_cloud_user: alpine
+
+tiny_cloud_init:
+  - service: tiny-cloud-early
+    runlevel: sysinit
+  - service: tiny-cloud
+    runlevel: default
+  - service: tiny-cloud-final
+    runlevel: default
+
+tiny_cloud_imds_vars:
+  - regexp: '(IMDS_SSH_KEYS=")(.*)(")$'
+    line: '\1user-data/ssh_authorized_keys\3'
+  - regexp: '(IMDS_HOSTNAME=")(.*)(\/.*)$'
+    line: '\1user-data\3'
+
