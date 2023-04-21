@@ -26,6 +26,10 @@
     enabled: yes
     state: started
 
+- name: Install tzdata
+  package:
+    name: tzdata
+
 - name: configure timezone
   timezone:
     name: '{{ timezone }}'
