@@ -1,0 +1,12 @@
+---
+sshd_awall_policy:
+  ssh:
+    description: "Allow incoming SSH access (TCP/22)"
+    filter:
+      - in: internet
+        out: _fw
+        service: ssh
+        action: accept
+        conn-limit:
+          count: 3
+          interval: 60

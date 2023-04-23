@@ -1,0 +1,35 @@
+---
+awall_default_rules:
+  deny-all:
+    description: "Deny everything by default"
+    variable:
+      internet_if: eth0
+    zone:
+      internet:
+        iface: $internet_if
+    policy:
+      - in: internet
+        action: drop
+      - action: reject
+  outgoing:
+    description: "Allow outgoing connections for dns, http/https, ssh, ntp, ssh and ping"
+    filter:
+      - in: _fw
+        out: internet
+        service:
+          - dns
+          - http
+          - https
+          - ssh
+          - ntp
+          - ping
+        action: accept
+  ping:
+    description: "Allow incomming ping"
+    filter:
+      - in: internet
+        service: ping
+        action: accept
+        flow-limit:
+          count: 10
+          interval: 6

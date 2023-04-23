@@ -1,33 +1,64 @@
 ---
 
-# - name: Install firewalld
-#   package:
-#     name: firewalld
-#     state: present
+- name: Install awall
+  package:
+    name: awall
+    state: present
 
-# - name: Install firewalld configuration
-#   template:
-#     src: firewalld.conf.j2
-#     dest: /etc/firewalld/firewalld.conf
-#     owner: root
-#     group: root
-#     mode: 0644
-#   notify:
-#     - Restart firewalld
+- name: Load iptables module
+  modprobe:
+    name: ip_tables
+    state: present
 
-# - name: Start and enable firewalld
-#   service:
-#     name: firewalld
-#     enabled: "{{ configure_firewall }}"
-#     state: "{{ configure_firewall | ternary('started', 'stopped') }}"
+- name: Enable ip(6)tables service
+  service:
+    name: '{{ item }}'
+    state: started
+    enabled: yes
+  with_items:
+    - iptables
+    - ip6tables
 
-# - name: Disable default dhcpv6-client rule
-#   firewalld:
-#     service: dhcpv6-client
-#     state: disabled
-#     immediate: true
-#   when: configure_firewall
+- name: Deploy standard awall rules
+  template: 
+    src: awall-template.j2
+    dest: /etc/awall/optional/{{ item.key }}.json
+    owner: root
+    group: root
+    mode: 0644
+  with_dict: '{{ awall_default_rules }}'
 
+- name: Debug
+  debug:
+    var: awall_service_rules
+
+- name: Deploy specific service awall rules.
+  template:
+    src: awall-template.j2
+    dest: /etc/awall/optional/{{ item.key }}.json
+    owner: root
+    group: root
+    mode: 0644
+  with_dict: '{{ awall_service_rules }}'
+  when: awall_service_rules is defined
+
+- name: find all files in /etc/awall/optional/
+  find:
+    paths: /etc/awall/optional
+    recurse: no
+    file_type: file
+  register: found_policies
+
+- name: Enable awall policies
+  awall:
+    name: '{{ item.path.split(".") | first | basename }}'
+    state: enabled
+  with_items: '{{ found_policies.files }}'
+
+- name: Activate firewall rules
+  awall:
+    activate: true
+  
 - name: Configure sysctl
   sysctl:
     name: '{{ item.name }}'

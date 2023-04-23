@@ -26,6 +26,11 @@
     group: root
     mode: 0644
 
+- name: Define awall rule.
+  set_fact:
+    awall_service_rules: '{{ awall_service_rules | combine(sshd_awall_policy) }}'
+  when: ansible_os_family == "Alpine"
+
 - name: Open firewall ports
   tags:
     - firewall
