@@ -6,6 +6,7 @@
     - ../../group_vars/all/common.yml
     - ../../group_vars/all/root_access.yml
     - ../../group_vars/all/users.yml
+    - ../../group_vars/all/firewall.yml
 
   vars:
     - packer: yes
@@ -14,7 +15,7 @@
     - { role: python }
     - { role: common }
     - { role: tools }
-    - { role: firewall }
     - { role: sshd }
     - { role: root }
     - { role: tiny-cloud }
+    - { role: firewall }
