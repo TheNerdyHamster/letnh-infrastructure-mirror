@@ -1,0 +1,7 @@
+dns_container_name: dns
+dns_container_image: letnh/bind9-alpine:latest
+
+zone:
+  domain: "int.letnh.dev"
+  ttl: 86400
+

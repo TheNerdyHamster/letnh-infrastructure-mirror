@@ -1,0 +1,53 @@
+---
+
+- name: setup bind9 filestructure
+  file:
+    path: '{{ container_storage_path }}/{{ dns_container_name }}/{{ item.path }}'
+    state: directory
+    owner: '{{ item.owner }}'
+    group: '{{ item.group }}'
+    mode: '{{ item.mode | default("0755") }}'
+  with_items:
+    - { path: 'etc/bind', owner: 'root', group: '101', mode: '0755' }
+    - { path: 'var/cache/bind', owner: '100', group: '101' }
+    - { path: 'var/bind', owner: '100', group: '101' }
+    - { path: 'var/log', owner: '100', group: '101' }
+  become: true
+
+- name: Setup bind container
+  docker_container:
+    name: '{{ dns_container_name }}'
+    image: '{{ dns_container_image }}'
+    state: stopped
+    ports:
+      - '53:53/udp'
+      - '53:53/tcp'
+      - '953:953/tcp'
+    volumes:
+      - '{{ container_storage_path }}/{{ dns_container_name }}/etc/bind:/etc/bind'
+      - '{{ container_storage_path }}/{{ dns_container_name }}/var/cache/bind:/var/cache/bind'
+      - '{{ container_storage_path }}/{{ dns_container_name }}/var/bind:/var/bind'
+      - '{{ container_storage_path }}/{{ dns_container_name }}/var/log:/var/log'
+  notify: start dns
+
+- name: Generate template configuration
+  template:
+    src: named.conf.j2
+    dest: '{{ container_storage_path }}/{{ dns_container_name }}/etc/bind/named.conf'
+    owner: root
+    group: 101
+    mode: 0644
+  become: true
+  notify: restart dns
+
+- name: Generate zone from template
+  template:
+    src: domain.tld.zone.j2
+    dest: '{{ container_storage_path }}/{{ dns_container_name }}/var/bind/{{ zone.domain }}.zone'
+    owner: 100
+    group: 101
+    mode: 0644
+  become: true
+  notify: restart dns
+
+

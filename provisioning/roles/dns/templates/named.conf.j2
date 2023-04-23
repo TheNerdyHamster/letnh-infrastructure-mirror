@@ -1,0 +1,14 @@
+options {
+  directory "/var/bind";
+  pid-file "/var/run/named/named.pid";
+  listen-on { any; };
+  recursion yes;
+  allow-recursion { any; };
+  forwarders { 9.9.9.9; };
+};
+
+zone "int.letnh.dev" IN {
+    type master;
+    file "int.letnh.dev.zone";
+    allow-update { none; };
+};

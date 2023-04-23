@@ -1,0 +1,20 @@
+; {{ ansible_managed }}
+$ORIGIN {{ zone.domain }}.
+$TTL {{ zone.ttl }}
+
+@   IN          SOA     ns1.{{ zone.domain }}. registry.{{ zone.domain }}. (
+                                2018111112; Serial
+                                8h        ; Refresh
+                                30m       ; Retry
+                                1w        ; Expire
+                                1h )      ; Negative Cache TTL
+                NS      ns1
+
+; DMZ
+auth             A       10.51.255.20
+ns1              A       10.51.255.10
+
+; Infrastructure
+fw               A       10.51.10.10
+wireless         A       10.51.10.20
+

@@ -1,0 +1,12 @@
+---
+
+- name: restart dns
+  docker_container:
+    name: '{{ dns_container_name }}'
+    state: started
+    restart: yes
+
+- name: start dns
+  docker_container:
+    name: '{{ dns_container_name }}'
+    state: started

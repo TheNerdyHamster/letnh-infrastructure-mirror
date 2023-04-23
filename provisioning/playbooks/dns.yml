@@ -1,0 +1,10 @@
+---
+- name: dns setup
+  hosts: dns
+  remote_user: rocky
+  become: true
+  roles:
+    - { role: docker }
+    #- { role: podman }
+    #- { role: certbot, cert_domain: 'registry.{{ domain }}' }
+    - { role: dns }
