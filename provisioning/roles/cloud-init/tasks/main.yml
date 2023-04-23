@@ -1,0 +1,36 @@
+---
+
+- name: Install Cloud Init
+  package:
+    name: cloud-init
+
+- name: Enable cloud init
+  service:
+    name: '{{ item }}'
+    enabled: true
+  with_items:
+    - cloud-init
+    - cloud-init-local
+    - cloud-config
+    - cloud-final
+
+- name: Deploy cloud.cfg
+  template:
+    src: cloud.cfg.j2
+    dest: /etc/cloud/cloud.cfg
+    owner: root
+    group: root
+    mode: '644'
+
+- name: Deploy cloud-init config templates
+  template:
+    src: '{{ item }}.j2'
+    dest: /etc/cloud/cloud.cfg.d/{{ item }}
+    owner: root
+    group: root
+    mode: '644'
+  with_items:
+    - 50_hotplug.cfg
+    - 60_apk.cfg
+    - 80_sshd.cfg
+    - 99_pve.cfg

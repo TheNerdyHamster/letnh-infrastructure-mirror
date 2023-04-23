@@ -1,0 +1,6 @@
+---
+cloud_init_disable_root: false
+cloud_init_user: alpine
+cloud_init_lock_passwd: false
+cloud_init_gecos: "alpine Cloud user"
+cloud_init_shell: /bin/ash
